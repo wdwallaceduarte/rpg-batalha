@@ -226,6 +226,22 @@ box-shadow: 0 0 0 2px rgba(196, 30, 30, 0.25);
 color: var(--cor-texto-secundario);
 }
 
+/* ============================================================
+   REMOVE SPINNERS DOS CAMPOS NUMÉRICOS
+   ============================================================ */
+
+/* Chrome, Safari, Edge */
+.campo-texto[type="number"]::-webkit-inner-spin-button,
+.campo-texto[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+.campo-texto[type="number"] {
+  -moz-appearance: textfield;
+}
+
 /* 
   ============================================================
    BOTÕES
