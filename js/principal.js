@@ -30,3 +30,24 @@
 
    //TEMA
    const botaoTema = document.getElementById('botaoTema')
+
+   /* ============================================================
+   SEÇÃO 2 — ESTADO DA APLICAÇÃO
+   Variáveis que guardam os dados enquanto a aplicação roda.
+   ============================================================ */
+
+   //Lista de personagens cadastrado na batalha
+   let listaPersonagens = []
+
+   //NUMERO DE TURNO ATUAL
+   let turnoAtual = 1
+
+   //INDICE DO PERSONAGEM ATIVO NA ORDEM DE INICIATIVA
+   let indicePersonagemAtivo = 0
+
+   //HISTORICO DE DANO POR PERSONAGEM POR TURNO
+   // Estrutura: { [idPersonagem]: { [numeroTurno]: valorDano } }
+    let historicoDano = {}
+
+    //CONTROLA SE O TEMA CLARO ESTA ATIVO
+    let temaClaro = false
