@@ -1,126 +1,141 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RPG Batalha</title>
-    <link rel="stylesheet" href="./css/estilos.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RPG Batalha</title>
+  <link rel="stylesheet" href="css/estilos.css" />
 </head>
 
 <body>
-    <!-- CABECALHO -->
-    <header class="cabecalho">
-        <h1 class="cabecalho__titulo">⚔️ RPG Batalha</h1>
-        <button class="cabecalho__botao-tema" id="botaoTema">
-            🌙 Modo Escuro
-        </button>
-    </header>
 
-    <!-- PAINEL DE CONTROLE -->
-    <main class="conteudo-pricipal">
-        <section class="painel-controle">
-            <!-- CADASTRO DE PERSONAGEM -->
-            <div class="painel-controle__grupo" id="grupoCadastro">
-                <h2 class="painel-controle-titulo">Cadastrar Personagem</h2>
+  <!-- ========== CABEÇALHO ========== -->
+  <header class="cabecalho">
+    <h1 class="cabecalho__titulo">⚔️ RPG Batalha</h1>
+    <button class="cabecalho__botao-tema" id="botaoTema">🌙 Modo Escuro</button>
+  </header>
 
-                <div class="painel-controle-campo">
-                    <input 
-                        type="text" 
-                        class="campo-texto" 
-                        id="campoJogador" 
-                        placeholder="Nome do Jogador"
-                    />
-                    <input 
-                        type="text" 
-                        class="campo-texto" 
-                        id="campoPersonagem" 
-                        placeholder="Nome do Personagem"
-                    />
-                    <input 
-                        type="number" 
-                        class="campo-texo campo-texto-pequeno" 
-                        id="campoIniciativa" 
-                        placeholder="Iniciativa"
-                    />
-                    <input 
-                        type="number" 
-                        class="campo-texo campo-texto-pequeno" 
-                        id="campoPontosDeVida" 
-                        placeholder="Pv Máximo"
-                    />
-                </div>
+  <!-- ========== PAINEL DE CONTROLE ========== -->
+  <main class="conteudo-principal">
 
-                <div class="painel-controle-acoes">
-                    <button class="botao botao-adcionar" id="botaoAdcionarPersonagem">
-                        ➕ Adcionar PJ
-                    </button>
-                </div>
-            </div>
-            <!-- CONTROLE DE DANO E CURA -->
-            <div class="painel-controle-grupo" id="grupoAcoesBatalha">
-                <h2 class="painel-controle-titulo">Ações de Batalha</h2>
+    <section class="painel-controle">
 
-                <div class="painel-comtrole-campos">
-                    <input 
-                    type="number" 
-                    class="campo-texto campo-texto-pequeno"
-                    id="campoDano"
-                    placeholder="Valor do dano"
-                    >
-                    <input 
-                    type="number" 
-                    class="campo-texto campo-texto-pequeno"
-                    id="campoCura"
-                    placeholder="Valor da Cura"
-                    >
-                </div>
+      <!-- Cadastro de personagem -->
+      <div class="painel-controle__grupo" id="grupoCadastro">
+        <h2 class="painel-controle__titulo">Cadastrar Personagem</h2>
 
-                <div  class="painel-controle-acoes">
-                    <button class="botao botao-dano" id="botaoAplicarDano">
-                        🗡️ Aplicar Dano
-                    </button>
-                    <button class="botao botai-cura" id="botaoAplicarCura">
-                        💚 Aplicar Cura
-                    </button>
-                    <button class="botao botao-proximo" id="botaoProximoTurno">
-                        ⏭️ Próximo Turno
-                    </button>
-                </div>
-            </div>
-        </section>
+        <div class="painel-controle__campos">
+          <input
+            class="campo-texto"
+            type="text"
+            id="campoJogador"
+            placeholder="Nome do jogador"
+          />
+          <input
+            class="campo-texto"
+            type="text"
+            id="campoPersonagem"
+            placeholder="Nome do personagem"
+          />
+          <input
+            class="campo-texto campo-texto--pequeno"
+            type="number"
+            id="campoIniciativa"
+            placeholder="Iniciativa"
+          />
+          <input
+            class="campo-texto campo-texto--pequeno"
+            type="number"
+            id="campoPontosDeVida"
+            placeholder="PV máximo"
+          />
+        </div>
 
-        <!-- AREA DE BATALHA -->
-        <section class="area-batalha">
-            <div class="area-batalha-cabecalho">
-                <h2 class="area-batalha-titulo">🏰 Campo de Batalha</h2>
-                <span class="area-batalha-turno" id="indicadorTurno">
-                    Turno: 1
-                </span>
-            </div>
-            <!-- A tabela será gerada pelo JavaScript -->
-            <div class="area-batalha-tabela-container" id="tabelaBatalha">
-                <thead>
-                    <tr class="tabela-batalha-cabecalho-linha">
-                        <th class="tabela-batalha-cabecalho-celula">IniciativaJogador</th>
-                        <th class="tabela-batalha-cabecalho-celula">Jogador</th>
-                        <th class="tabela-batalha-cabecalho-celula">Personagem</th>
-                        <th class="tabela-batalha-cabecalho-celula" id="cabecalhoDano">
-                            <!-- Coluna de dano por turno serão adcionadas aqui -->
-                        </th>
-                        <th class="tabela-batalha-cabecalho-celula">PV Máx.</th>
-                        <th class="tabela-batalha-cabecalho-celula">Pv Atual</th>
-                        <th class="tabela-batalha-cabecalho-celula">Ações</th>
-                    </tr>
-                </thead>
-                <tbody id="corpoTabela">
-                    <!-- linha de personagens serão inseridas aqui pelo JavaScript -->
-                </tbody>
-            </div>
-        </section>
-    </main>
+        <div class="painel-controle__acoes">
+          <button class="botao botao--adicionar" id="botaoAdicionarPersonagem">
+            ➕ Adicionar Personagem
+          </button>
+        </div>
+      </div>
 
-    <script src="./js/principal.js"></script>
+      <!-- Controle de dano e cura -->
+      <div class="painel-controle__grupo" id="grupoAcoesBatalha">
+  <h2 class="painel-controle__titulo">Ações de Batalha</h2>
+
+  <div class="painel-controle__acoes-batalha">
+
+    <div class="painel-controle__coluna">
+      <input
+        class="campo-texto"
+        type="number"
+        id="campoDano"
+        placeholder="Valor do dano"
+      />
+      <button class="botao botao--dano" id="botaoAplicarDano">
+        🗡️ Aplicar Dano
+      </button>
+    </div>
+
+    <div class="painel-controle__coluna">
+      <input
+        class="campo-texto"
+        type="number"
+        id="campoCura"
+        placeholder="Valor da cura"
+      />
+      <button class="botao botao--cura" id="botaoAplicarCura">
+        💚 Aplicar Cura
+      </button>
+    </div>
+
+    <div class="painel-controle__coluna">
+      <div class="painel-controle__coluna-vazia"></div>
+      <button class="botao botao--proximo" id="botaoProximoTurno">
+        ⏭️ Próximo Turno
+      </button>
+    </div>
+
+  </div>
+</div>
+
+    </section>
+
+    <!-- ========== ÁREA DA BATALHA ========== -->
+    <section class="area-batalha">
+      <div class="area-batalha__cabecalho">
+        <h2 class="area-batalha__titulo">🏰 Campo de Batalha</h2>
+        <span class="area-batalha__turno" id="indicadorTurno">Turno: 1</span>
+      </div>
+
+      <!-- A tabela será gerada pelo JavaScript -->
+      <div class="area-batalha__tabela-container" id="containerTabela">
+
+        <table class="tabela-batalha" id="tabelaBatalha">
+          <thead>
+            <tr class="tabela-batalha__cabecalho-linha">
+              <th class="tabela-batalha__cabecalho-celula">Iniciativa</th>
+              <th class="tabela-batalha__cabecalho-celula">Jogador</th>
+              <th class="tabela-batalha__cabecalho-celula">Personagem</th>
+              <th class="tabela-batalha__cabecalho-celula" id="cabecalhoDanos">
+                <!-- Colunas de dano por turno serão adicionadas aqui -->
+              </th>
+              <th class="tabela-batalha__cabecalho-celula">PV Máx.</th>
+              <th class="tabela-batalha__cabecalho-celula">PV Atual</th>
+              <th class="tabela-batalha__cabecalho-celula">Ações</th>
+            </tr>
+          </thead>
+          <tbody id="corpoTabela">
+            <!-- Linhas de personagens serão inseridas aqui pelo JavaScript -->
+          </tbody>
+        </table>
+
+      </div>
+    </section>
+
+  </main>
+
+  <script src="js/principal.js"></script>
 </body>
 
 </html>

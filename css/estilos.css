@@ -1,0 +1,288 @@
+/* ============================================================
+   VARIÁVEIS DE TEMA — Dungeons & Dragons
+   ============================================================ */
+
+:root {
+  /* Cores do tema escuro (padrão) */
+  --cor-fundo-pagina: #1a0a00;
+  --cor-fundo-componente: #2a1506;
+  --cor-fundo-input: #3d2008;
+  --cor-borda: #6b3a1f;
+  --cor-texto-principal: #f0d9b0;
+  --cor-texto-secundario: #b89a6a;
+  --cor-destaque: #c41e1e;
+
+  /* Cores de ação */
+  --cor-adicionar: #2d6a2d;
+  --cor-adicionar-hover: #245424;
+  --cor-dano: #c41e1e;
+  --cor-dano-hover: #a01818;
+  --cor-cura: #2d6a2d;
+  --cor-cura-hover: #245424;
+  --cor-proximo: #b8860b;
+  --cor-proximo-hover: #9a7009;
+  --cor-excluir: #c41e1e;
+  --cor-excluir-hover: #a01818;
+
+  /* Cores da tabela */
+  --cor-fundo-cabecalho-tabela: #3d0000;
+  --cor-fundo-linha-par: #2a1506;
+  --cor-fundo-linha-impar: #221004;
+  --cor-fundo-linha-ativa: #5c1a00;
+
+  /* Espaçamentos */
+  --espaco-pequeno: 8px;
+  --espaco-medio: 16px;
+  --espaco-grande: 24px;
+
+  /* Bordas */
+  --raio-borda: 6px;
+
+  /* Transições */
+  --transicao-padrao: all 0.2s ease;
+}
+
+/* Tema claro — pergaminho iluminado */
+:root.tema-claro {
+  --cor-fundo-pagina: #f5e6c8;
+  --cor-fundo-componente: #fdf3dc;
+  --cor-fundo-input: #fff8ee;
+  --cor-borda: #c8a96e;
+  --cor-texto-principal: #2a1506;
+  --cor-texto-secundario: #6b4423;
+  --cor-destaque: #8b0000;
+  --cor-fundo-cabecalho-tabela: #8b0000;
+  --cor-fundo-linha-par: #fdf3dc;
+  --cor-fundo-linha-impar: #f5e6c8;
+  --cor-fundo-linha-ativa: #f5c6a0;
+}
+
+/* ============================================================
+   RESET
+   ============================================================ */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: var(--cor-fundo-pagina);
+  color: var(--cor-texto-principal);
+  min-height: 100vh;
+  transition: var(--transicao-padrao);
+}
+
+/* 
+  ============================================================
+   CABEÇALHO
+   ============================================================ 
+*/
+
+.cabecalho {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--espaco-medio) var(--espaco-grande);
+  background-color: var(--cor-fundo-componente);
+  border-bottom: 2px solid var(--cor-destaque);
+}
+
+.cabecalho__titulo {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--cor-destaque);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.cabecalho__botao-tema {
+  padding: var(--espaco-pequeno) var(--espaco-medio);
+  background-color: transparent;
+  color: var(--cor-texto-principal);
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio-borda);
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: var(--transicao-padrao);
+}
+
+.cabecalho__botao-tema:hover {
+  background-color: var(--cor-destaque);
+  color: var(--cor-texto-principal);
+  border-color: var(--cor-destaque);
+}
+
+/* 
+  ============================================================
+   CONTEÚDO PRINCIPAL
+   ============================================================ 
+*/
+
+.conteudo-principal {
+  padding: var(--espaco-grande);
+  padding-top: 1,5rem;
+  display: flex;
+  flex-direction: column;
+  gap: var(--espaco-grande);
+}
+
+/* 
+  ============================================================
+   PAINEL DE CONTROLE
+   ============================================================ 
+*/
+
+.painel-controle {
+display: flex;
+gap: var(--espaco-grande);
+flex-wrap: wrap;
+}
+
+.painel-controle__grupo {
+flex: 1;
+min-width: 280px;
+background-color: var(--cor-fundo-componente);
+border: 1px solid var(--cor-borda);
+border-radius: var(--raio-borda);
+padding: var(--espaco-grande);
+display: flex;
+flex-direction: column;
+gap: var(--espaco-medio);
+}
+
+.painel-controle__titulo {
+font-size: 1rem;
+font-weight: 700;
+color: var(--cor-destaque);
+text-transform: uppercase;
+letter-spacing: 1px;
+padding-bottom: var(--espaco-pequeno);
+border-bottom: 1px solid var(--cor-borda);
+}
+
+.painel-controle__campos {
+display: flex;
+flex-wrap: wrap;
+gap: var(--espaco-pequeno);
+}
+
+.painel-controle__acoes {
+display: flex;
+flex-wrap: wrap;
+gap: var(--espaco-pequeno);
+}
+
+.painel-controle__acoes-batalha {
+display: flex;
+gap: var(--espaco-pequeno);
+}
+
+.painel-controle__coluna {
+display: flex;
+flex-direction: column;
+flex: 1;
+gap: var(--espaco-pequeno);
+}
+
+.painel-controle__coluna-vazia {
+height: 38px;
+}
+
+/* 
+  ============================================================
+   CAMPOS DE TEXTO
+   ============================================================ 
+*/
+
+.campo-texto {
+flex: 1;
+min-width: 140px;
+padding: var(--espaco-pequeno) var(--espaco-medio);
+background-color: var(--cor-fundo-input);
+color: var(--cor-texto-principal);
+border: 1px solid var(--cor-borda);
+border-radius: var(--raio-borda);
+font-size: 0.95rem;
+transition: var(--transicao-padrao);
+outline: none;
+}
+
+.campo-texto--pequeno {
+min-width: 140px;
+flex: 1;
+}
+
+.campo-texto:focus {
+border-color: var(--cor-destaque);
+box-shadow: 0 0 0 2px rgba(196, 30, 30, 0.25);
+}
+
+.campo-texto::placeholder {
+color: var(--cor-texto-secundario);
+}
+
+/* 
+  ============================================================
+   BOTÕES
+   ============================================================ 
+*/
+
+.botao {
+padding: var(--espaco-pequeno) var(--espaco-medio);
+border: none;
+border-radius: var(--raio-borda);
+font-size: 0.9rem;
+font-weight: 600;
+cursor: pointer;
+transition: var(--transicao-padrao);
+white-space: nowrap;
+}
+
+.botao:hover {
+filter: brightness(1.1);
+transform: translate(-1px);
+}
+
+.botao:active {
+transform: translateY(0);
+}
+
+.botao--adcionar {
+background-color: var(--cor-adicionar);
+color: #ffffff;
+}
+
+.botao--dano {
+background-color: var(--cor-dano);
+color: #ffffff;
+flex: 1;
+}
+
+.botao--cura {
+background-color: var(--cor-cura);
+color: #ffffff;
+flex: 1;
+}
+
+.botao--proximo {
+background-color: var(--cor-proximo);
+color: #ffffff;
+flex: 1;
+}
+
+.botao--excluir {
+  background-color: transparent;
+color: var(--cor-excluir);
+border: 1px solid var(--espaco-pequeno);
+font-size: 0.8rem;
+}
+
+.botao--excluir:hover {
+background-color: var(--cor-excluir-hover);
+color: #ffffff;
+}
