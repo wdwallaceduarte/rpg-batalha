@@ -302,3 +302,119 @@ font-size: 0.8rem;
 background-color: var(--cor-excluir-hover);
 color: #ffffff;
 }
+
+/* ============================================================
+   ÁREA DE BATALHA
+   ============================================================ */
+
+.area-batalha {
+  background-color: var(--cor-fundo-componente);
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio-borda);
+  padding: var(--espaco-grande);
+  display: flex;
+  flex-direction: column;
+  gap: var(--espaco-medio);
+}
+
+.area-batalha__cabecalho {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: var(--espaco-pequeno);
+  border-bottom: 1px solid var(--cor-borda);
+}
+
+.area-batalha__titulo {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--cor-destaque);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.area-batalha__turno {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--cor-texto-secundario);
+  background-color: var(--cor-fundo-input);
+  padding: 4px var(--espaco-medio);
+  border-radius: var(--raio-borda);
+  border: 1px solid var(--cor-borda);
+}
+
+/* ============================================================
+   TABELA DE BATALHA
+   ============================================================ */
+
+.area-batalha__tabela-container {
+  overflow-x: auto;
+  border-radius: var(--raio-borda);
+}
+
+.tabela-batalha {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+  min-width: 600px;
+}
+
+.tabela-batalha__cabecalho-linha {
+  background-color: var(--cor-fundo-cabecalho-tabela);
+}
+
+.tabela-batalha__cabecalho-celula {
+  padding: var(--espaco-pequeno) var(--espaco-medio);
+  text-align: left;
+  font-weight: 700;
+  color: var(--cor-texto-principal);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-size: 0.8rem;
+  border-bottom: 2px solid var(--cor-destaque);
+  white-space: nowrap;
+}
+
+.tabela-batalha__linha {
+  border-bottom: 1px solid var(--cor-borda);
+  transition: var(--transicao-padrao);
+}
+
+.tabela-batalha__linha:nth-child(even) {
+  background-color: var(--cor-fundo-linha-par);
+}
+
+.tabela-batalha__linha:nth-child(odd) {
+  background-color: var(--cor-fundo-linha-impar);
+}
+
+.tabela-batalha__linha--ativa {
+  background-color: var(--cor-fundo-linha-ativa) !important;
+  border-left: 3px solid var(--cor-destaque);
+}
+
+.tabela-batalha__linha:hover {
+  filter: brightness(1.15);
+}
+
+.tabela-batalha__celula {
+  padding: var(--espaco-pequeno) var(--espaco-medio);
+  color: var(--cor-texto-principal);
+  white-space: nowrap;
+}
+
+.tabela-batalha__celula--dano {
+  color: var(--cor-dano);
+  font-weight: 600;
+  text-align: center;
+}
+
+.tabela-batalha__celula--pv-atual {
+  font-weight: 700;
+  color: var(--cor-cura);
+}
+
+.tabela-batalha__celula--pv-critico {
+  font-weight: 700;
+  color: var(--cor-dano) !important;
+}
