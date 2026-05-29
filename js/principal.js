@@ -47,7 +47,7 @@ let indicePersonagemAtivo = 0
 
 //HISTORICO DE DANO POR PERSONAGEM POR TURNO
 // Estrutura: { [idPersonagem]: { [numeroTurno]: valorDano } }
-let historicoDano = {}
+let historicoDanos = {}
 
 //CONTROLA SE O TEMA CLARO ESTA ATIVO
 let temaClaro = false
@@ -65,8 +65,8 @@ Responsáveis por desenhar e atualizar a interface.
 function obterTurnosComDano() {
     const turnosEncontrados = new Set()
 
-    listaPersonagens.forEach(function (personagem)  {
-        const danosDoPersonagem = historicoDano[personagem.id] || {}
+    listaPersonagens.forEach(function (personagem) {
+        const danosDoPersonagem = historicoDanos[personagem.id] || {}
         Object.keys(danosDoPersonagem).forEach(function (turno) {
             turnosEncontrados.add(Number(turno))
         })
@@ -140,7 +140,7 @@ function criarLinhaPersonagem(personagem, indice, turnosComDano) {
 
     //CELULA DE DANO POR TURNO
     turnosComDano.forEach(function (numeroTurno) {
-        const danoNoTurno = (historicoDano[personagem.id] || {})[numeroTurno]
+        const danoNoTurno = (historicoDanos[personagem.id] || {})[numeroTurno]
         const celula = document.createElement('td')
         celula.className = 'tabela-batalha__celula'
 
@@ -327,7 +327,7 @@ function removerPersonagem(idPersonagem) {
         return personagem.id !== idPersonagem
     })
 
-    delete historicoDano[idPersonagem]
+    delete historicoDanos[idPersonagem]
 
     //Ajusta o índice ativo se necessário
     if (indicePersonagemAtivo >= listaPersonagens.length) {
@@ -352,5 +352,150 @@ corpoTabela.addEventListener('click', function (evento) {
 //Conecta o botão de eadcionar à função
 botaoAdicionarPersonagem.addEventListener('click', adicionarPersonagem)
 
+/* ============================================================
+   SEÇÃO 5 — FUNÇÕES DE BATALHA
+   Responsáveis pelo controle de dano, cura e turnos.
+   ============================================================ */
 
-renderizarTabela()
+/* 
+* Retorna o personagem atualmente ativo na ordem de iniciativa
+*/
+
+function obterPersonagemAtivo() {
+    return listaPersonagens[indicePersonagemAtivo]
+}
+
+/*
+ * Valida se existe um personagem ativo e um valor numérico Válido
+ no campo informado.
+ */
+
+function validarAcaoBatalha(campoValor, nomeCampo) {
+    if (listaPersonagens.length === 0) {
+        alert('Nenhum personagem no campo de batalha!')
+        return false
+    }
+
+    const valor = Number(campoValor.value)
+
+    if (!campoValor.value || isNaN(valor) || valor <= 0) {
+        alert('Por favor, informe um valor válido para ' + nomeCampo + '.')
+        campoValor.focus()
+        return false
+    }
+
+    return true
+}
+
+/**
+ * Aplica dano ao personagem atualmente ativo.
+ * Registra o dano no histórico do tuno atual.
+ */
+
+function aplicarDano() {
+    if (!validarAcaoBatalha(campoDano, 'o dano')) return
+
+    const personagemAtivo = obterPersonagemAtivo()
+    const valorDano = Number(campoDano.value)
+
+    //Subtrair o dano dos PV, sem deixar baixar a zero
+    personagemAtivo.pvAtual = Math.max(0, personagemAtivo.id - valorDano)
+
+    //Registrar no historico - acumula se já houver dano neste turno
+    const danoAnterior = historicoDanos[personagemAtivo.id][turnoAtual] || 0
+    historicoDanos[personagemAtivo.id][turnoAtual] = danoAnterior + valorDano
+
+    campoDano.value = ''
+    renderizarTabela()
+
+    //Avisar se o personagem chegou a zero
+    if (personagemAtivo.pvAtual === 0) {
+        alert(personagemAtivo.nome + 'chegou a 0 PV e está inconsciente!')
+    }
+}
+
+/**
+ * Aplica cura ao personagem atualmente ativo.
+ * PV não pode sultrapassar o valor máximo.
+ */
+
+function aplicarCura() {
+    if (!validarAcaoBatalha(campoCura, 'a cura')) return
+
+    const personagemAtivo = obterPersonagemAtivo()
+    const valorCura = Number(campoCura.value)
+
+    //Soma a cura nos PV, sem ultrapassar o máximo
+    personagemAtivo.pvAtual = Math.min(
+        personagemAtivo.pvMaximo,
+        personagemAtivo.pvAtual + valorCura
+    )
+
+    campoCura.value = ''
+    renderizarTabela()
+}
+
+/**
+ * 
+ * avançar para o próximo personagem na ordem de iniciativa.
+ * Quando todos jogaram, incrementa o número do turno.
+ */
+
+function avancarTurno() {
+    if (listaPersonagens.length === 0) {
+        alert('Nenhum personagem cadastrado na batalha!')
+        return
+    }
+
+    indicePersonagemAtivo++
+
+    //Se passou do último personagem, volta ao primeiro e avança o turno
+    if (indicePersonagemAtivo >= listaPersonagens.length) {
+        indicePersonagemAtivo = 0
+        turnoAtual
+    }
+
+    renderizarTabela()
+}
+
+//Conecta os botões de batalha às suas funções
+botaoAplicarDano.addEventListener('click', aplicarDano)
+botaoAplicarCura.addEventListener('click', aplicarCura)
+botaoProximoTurno.addEventListener('click', avancarTurno)
+
+/* ============================================================
+   SEÇÃO 6 — FUNÇÕES DE TEMA
+   Responsável por alternar entre modo escuro e claro.
+   ============================================================ */
+
+   /*
+     Alterna entre o tema escuro eo tema claro.
+   */
+function alternarTema() {
+    temaClaro = !temaClaro
+
+    document.documentElement.classList.toggle('tema-claro', temaClaro)
+
+    botaoTema.textContent = temaClaro ? '🌑 Modo Escuro' : '🌙  Modo Claro'
+}
+
+//Conecta o botão de tema à sua função 
+botaoTema.addEventListener('click', alternarTema)
+
+/* ============================================================
+   SEÇÃO 7 — INICIALIZAÇÃO
+   Ponto de entrada da aplicação — executa ao carregar a página.
+   ============================================================ */
+
+   /* 
+     Inicializa a aplicação.
+   */
+
+     function inicializar() {
+        renderizarTabela()
+     }
+
+     inicializar()
+
+
+
