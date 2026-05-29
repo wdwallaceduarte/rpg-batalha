@@ -119,7 +119,7 @@ function criarLinhaPersonagem(personagem, indice, turnosComDano) {
     }
 
     //CELULA DE INICIATIVA
-    linha.innerHTML = + `
+    linha.innerHTML = `
         <td class="tabela-batalha__celula">
             ${personagem.iniciativa}    
         </td>
@@ -169,6 +169,7 @@ function criarLinhaPersonagem(personagem, indice, turnosComDano) {
             ? 'tabela-batalha__celula--pv-critico'
             : 'tabela-batalha__celula--pv-atual'}">
             ${personagem.pvAtual}${pvCritico ? ' ⚠️' : ''}
+        </td>
     `
     // Célula de ações
     linha.innerHTML += `
@@ -306,6 +307,7 @@ function adicionarPersonagem() {
 
 
     //Inicializa o histórico de danos deste personagem
+    historicoDanos[novoPersonagem.id] = {}  
     listaPersonagens.push(novoPersonagem)
     listaPersonagens.sort(function (a, b) {
         return b.iniciativa - a.iniciativa
@@ -399,7 +401,7 @@ function aplicarDano() {
     const valorDano = Number(campoDano.value)
 
     //Subtrair o dano dos PV, sem deixar baixar a zero
-    personagemAtivo.pvAtual = Math.max(0, personagemAtivo.id - valorDano)
+    personagemAtivo.pvAtual = Math.max(0, personagemAtivo.pvAtual - valorDano)
 
     //Registrar no historico - acumula se já houver dano neste turno
     const danoAnterior = historicoDanos[personagemAtivo.id][turnoAtual] || 0
@@ -452,7 +454,7 @@ function avancarTurno() {
     //Se passou do último personagem, volta ao primeiro e avança o turno
     if (indicePersonagemAtivo >= listaPersonagens.length) {
         indicePersonagemAtivo = 0
-        turnoAtual
+        turnoAtual++
     }
 
     renderizarTabela()

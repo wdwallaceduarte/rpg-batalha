@@ -1,5 +1,5 @@
 {
-    "nome": "rpg-batalha",
+    "name": "rpg-batalha",
     "version": "1.0.0",
     "scripts": {
         "servidor": "json-server --watch dados/db.json --port 3000"
