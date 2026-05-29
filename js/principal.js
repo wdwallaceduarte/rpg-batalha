@@ -168,7 +168,7 @@ function criarLinhaPersonagem(personagem, indice, turnosComDano) {
         <td class="tabela-batalha__celula ${pvCritico
             ? 'tabela-batalha__celula--pv-critico'
             : 'tabela-batalha__celula--pv-atual'}">
-            ${personagem.pvAtual}${pvCritico ? ' ⚠️' : ''}
+            ${personagem.pvAtual}${pvCritico ? ' ❌' : ''}
         </td>
     `
     // Célula de ações
