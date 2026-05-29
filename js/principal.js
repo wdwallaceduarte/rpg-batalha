@@ -9,7 +9,7 @@
 const campoJogador = document.getElementById('campoJogador')
 const campoPersonagem = document.getElementById('campoPersonagem')
 const campoIniciativa = document.getElementById('campoIniciativa')
-const campoPortosDeVida = document.getElementById('campoPortosDeVida')
+const campoPontosDeVida = document.getElementById('campoPontosDeVida')
 
 // BOTÃO DE cadastro
 const botaoAdcionarPersonagem = document.getElementById('botaoAdcionarPersonagem')
@@ -222,3 +222,132 @@ function renderizarTabela() {
     })
 
 }
+
+/* ============================================================
+   SEÇÃO 4 — FUNÇÕES DE PERSONAGEM
+   Responsáveis por adicionar e remover personagens da batalha.
+   ============================================================ */
+
+/**
+ * Valida os campos do formulario de cadastro.
+ * Retorna true se tudo estiiver correto, falso caso contratio.
+ */
+
+function validarCadastroPersonagem() {
+    const nomeJogador = campoJogador.ariaValueMax.trim()
+    const nomePersonagem = campoPersonagem.ariaValueMax.trim()
+    const iniciativa = Number(campoIniciativa.value)
+    const pontosDeVida = Number(campoPontosDeVida)
+
+    if (!nomeJogador) {
+        alert('Por favor, informe o noome do jogador.')
+        campoJogador.focus()
+        return false
+    }
+
+    if (!nomePersonagem) {
+        alert('Por favor, informe o nome do personagem.')
+        campoPersonagem.focus()
+        return false
+    }
+
+    if (!campoIniciativa.value || isNaN(iniciativa)) {
+        alert('Por favor, informe um valor de iniciativa válido.')
+        campoIniciativa.focus()
+        return false
+    }
+
+    if (!campoPontosDeVida.value || isNaN(pontosDeVida) || pontosDeVida <= 0) {
+        alert('Por favor, informe um valor de PV válido e maior que zero.')
+        campoPontosDeVida.focus()
+        return false
+    }
+
+    return true
+}
+
+/* 
+    Cria um objeto personagem com os dados do formulário.
+ */
+
+    function cirarObjetoPersonagem() {
+        return {
+            id: Data.now(),
+            jogador: campoJogador.value.trim(),
+            nome: campoPersonagem.value.trim(),
+            iniciativa: Number(campoIniciativa.value),
+            pvMaximo: Number(campoPontosDeVida.value),
+            pvAtual: Number(campoPontosDeVida)
+        }
+    }
+
+    /* 
+    Limpa todos os campos do formulário de cadastro.
+    */
+
+    function limparCamposCadastro() {
+        campoJogador.value = ''
+        campoPersonagem.value = ''
+        campoIniciativa.value = ''
+        campoPontosDeVida.value = ''
+        campoJogador.focus() = ''
+
+    }
+
+    /** 
+    * Adiciona um personagem à batalha.
+    * Ordena a lista por iniciativa (maior primeiro).
+    */
+
+    function adcionarPersonagem() {
+        if (!validarCadastroPersonagem()) return
+
+        const novoPersonagem = cirarObjetoPersonagem
+
+
+        //Inicializa o histórico de danos deste personagem
+        listaPersonagens.push(novoPersonagem)
+        listaPersonagens.sort(function (a, b) {
+            return b.iniciativa - a.iniciativa
+        })
+
+        limparCamposCadastro()
+        renderizarTabela()
+    }
+
+    /* 
+    Remove um personagem da batalha pelo seu id.
+    */
+
+    function removerPersonagem(idPersonagem) {
+        const confirmacao = confirm('Deseja realmente remover este personagem da batalha?')
+        if (!confirmacao) return    
+
+        listaPersonagens = listaPersonagens.filter(function (personagem) {
+            return personagem.id !== idPersonagem
+        })
+
+        delete historicoDano[idPersonagem]
+
+        //Ajusta o índice ativo se necessário
+        if (indicePersonagemAtivo >= listaPersonagens.length) {
+            indicePersonagemAtivo = 0
+        }
+
+        renderizarTabela()
+    }
+
+    /** 
+     * Deteccta cliques nos botões de remover dentro da tabala.
+     * Usamos delegação de eventos para capturar botões criados diinamicamente.
+      */
+     corpoTabela.addEventListener('click', function (evento) {
+        const botaoClicado = evento.target.closest('.botao--excluir')
+        if (!botaoClicado) return
+
+        const idPersonagem = Number(botaoClicado.dataset.id)
+        removerPersonagem(idPersonagem)
+     })
+
+     //Conecta o botão de eadcionar à função
+     botaoAdcionarPersonagem.addEventListener('click', adcionarPersonagem)
