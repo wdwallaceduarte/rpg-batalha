@@ -351,3 +351,7 @@ function validarCadastroPersonagem() {
 
      //Conecta o botão de eadcionar à função
      botaoAdcionarPersonagem.addEventListener('click', adcionarPersonagem)
+
+     
+
+     renderizarTabela()
