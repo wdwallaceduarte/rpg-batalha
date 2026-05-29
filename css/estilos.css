@@ -125,7 +125,7 @@ body {
 
 .conteudo-principal {
   padding: var(--espaco-grande);
-  padding-top: 1,5rem;
+  padding-top: 1.5rem;
   display: flex;
   flex-direction: column;
   gap: var(--espaco-grande);
@@ -268,7 +268,7 @@ transform: translate(-1px);
 transform: translateY(0);
 }
 
-.botao--adcionar {
+.botao--adicionar {
 background-color: var(--cor-adicionar);
 color: #ffffff;
 }
@@ -294,7 +294,7 @@ flex: 1;
 .botao--excluir {
   background-color: transparent;
 color: var(--cor-excluir);
-border: 1px solid var(--espaco-pequeno);
+border: 1px solid var(--cor-excluir);
 font-size: 0.8rem;
 }
 

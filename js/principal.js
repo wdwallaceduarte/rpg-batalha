@@ -12,7 +12,7 @@ const campoIniciativa = document.getElementById('campoIniciativa')
 const campoPontosDeVida = document.getElementById('campoPontosDeVida')
 
 // BOTÃO DE cadastro
-const botaoAdcionarPersonagem = document.getElementById('botaoAdcionarPersonagem')
+const botaoAdicionarPersonagem = document.getElementById('botaoAdicionarPersonagem')
 
 //CAMPOS DE BATALHA
 const campoDano = document.getElementById('campoDano')
@@ -25,7 +25,7 @@ const botaoProximoTurno = document.getElementById('botaoProximoTurno')
 
 //AREA DE BATALHA
 const corpoTabela = document.getElementById('corpoTabela')
-const indicadorTruno = document.getElementById('indicadorTruno')
+const indicadorTurno = document.getElementById('indicadorTurno')
 const tabelaBatalha = document.getElementById('tabelaBatalha')
 
 //TEMA
@@ -65,9 +65,9 @@ Responsáveis por desenhar e atualizar a interface.
 function obterTurnosComDano() {
     const turnosEncontrados = new Set()
 
-    listaPersonagens.forEach(function (PERSONAGEM) {
-        const danosDoPersonagem = historicoDanos[personagem.id] || {}
-        Objeto.keys(danosDoPersonagem).forEach(function (turno) {
+    listaPersonagens.forEach(function (personagem)  {
+        const danosDoPersonagem = historicoDano[personagem.id] || {}
+        Object.keys(danosDoPersonagem).forEach(function (turno) {
             turnosEncontrados.add(Number(turno))
         })
     })
@@ -108,7 +108,7 @@ function renderizarCabecalhoTabela(turnosComDano) {
 /* Cria e retorna uma linha <tr> completa
 para um personagem especifico. */
 
-function criaLinhaPersonagem(personagem, indice, turnosComDano) {
+function criarLinhaPersonagem(personagem, indice, turnosComDano) {
     const linha = document.createElement('tr')
     linha.className = 'tabela-batalha__linha'
     linha.dataset.id = personagem.id
@@ -133,8 +133,8 @@ function criaLinhaPersonagem(personagem, indice, turnosComDano) {
 
     //CELULA DE PERSONAGEM (MCOM INCONE SE AITVO)
     linha.innerHTML += `
-    <td class="tabela-batalha__celula>
-        ${estaAtivo ? '⚔️ ' : ''}${personagem.nome}
+    <td class="tabela-batalha__celula">
+        ${estadoAtivo ? '⚔️ ' : ''}${personagem.nome}
     </td>
     `
 
@@ -145,7 +145,7 @@ function criaLinhaPersonagem(personagem, indice, turnosComDano) {
         celula.className = 'tabela-batalha__celula'
 
         if (danoNoTurno) {
-            celula.classList.add('tabela__celula--dano')
+            celula.classList.add('tabela-batalha__celula--dano')
             celula.textContent = danoNoTurno
         } else {
             celula.style.textAlign = 'center'
@@ -234,10 +234,10 @@ function renderizarTabela() {
  */
 
 function validarCadastroPersonagem() {
-    const nomeJogador = campoJogador.ariaValueMax.trim()
-    const nomePersonagem = campoPersonagem.ariaValueMax.trim()
+    const nomeJogador = campoJogador.value.trim()
+    const nomePersonagem = campoPersonagem.value.trim()
     const iniciativa = Number(campoIniciativa.value)
-    const pontosDeVida = Number(campoPontosDeVida)
+    const pontosDeVida = Number(campoPontosDeVida.value)
 
     if (!nomeJogador) {
         alert('Por favor, informe o noome do jogador.')
@@ -270,88 +270,87 @@ function validarCadastroPersonagem() {
     Cria um objeto personagem com os dados do formulário.
  */
 
-    function cirarObjetoPersonagem() {
-        return {
-            id: Data.now(),
-            jogador: campoJogador.value.trim(),
-            nome: campoPersonagem.value.trim(),
-            iniciativa: Number(campoIniciativa.value),
-            pvMaximo: Number(campoPontosDeVida.value),
-            pvAtual: Number(campoPontosDeVida)
-        }
+function criarObjetoPersonagem() {
+    return {
+        id: Date.now(),
+        jogador: campoJogador.value.trim(),
+        nome: campoPersonagem.value.trim(),
+        iniciativa: Number(campoIniciativa.value),
+        pvMaximo: Number(campoPontosDeVida.value),
+        pvAtual: Number(campoPontosDeVida.value)
+    }
+}
+
+/* 
+Limpa todos os campos do formulário de cadastro.
+*/
+
+function limparCamposCadastro() {
+    campoJogador.value = ''
+    campoPersonagem.value = ''
+    campoIniciativa.value = ''
+    campoPontosDeVida.value = ''
+    campoJogador.focus()
+
+}
+
+/** 
+* Adiciona um personagem à batalha.
+* Ordena a lista por iniciativa (maior primeiro).
+*/
+
+function adicionarPersonagem() {
+    if (!validarCadastroPersonagem()) return
+
+    const novoPersonagem = criarObjetoPersonagem()
+
+
+    //Inicializa o histórico de danos deste personagem
+    listaPersonagens.push(novoPersonagem)
+    listaPersonagens.sort(function (a, b) {
+        return b.iniciativa - a.iniciativa
+    })
+
+    limparCamposCadastro()
+    renderizarTabela()
+}
+
+/* 
+Remove um personagem da batalha pelo seu id.
+*/
+
+function removerPersonagem(idPersonagem) {
+    const confirmacao = confirm('Deseja realmente remover este personagem da batalha?')
+    if (!confirmacao) return
+
+    listaPersonagens = listaPersonagens.filter(function (personagem) {
+        return personagem.id !== idPersonagem
+    })
+
+    delete historicoDano[idPersonagem]
+
+    //Ajusta o índice ativo se necessário
+    if (indicePersonagemAtivo >= listaPersonagens.length) {
+        indicePersonagemAtivo = 0
     }
 
-    /* 
-    Limpa todos os campos do formulário de cadastro.
-    */
+    renderizarTabela()
+}
 
-    function limparCamposCadastro() {
-        campoJogador.value = ''
-        campoPersonagem.value = ''
-        campoIniciativa.value = ''
-        campoPontosDeVida.value = ''
-        campoJogador.focus() = ''
+/** 
+ * Deteccta cliques nos botões de remover dentro da tabala.
+ * Usamos delegação de eventos para capturar botões criados diinamicamente.
+  */
+corpoTabela.addEventListener('click', function (evento) {
+    const botaoClicado = evento.target.closest('.botao--excluir')
+    if (!botaoClicado) return
 
-    }
+    const idPersonagem = Number(botaoClicado.dataset.id)
+    removerPersonagem(idPersonagem)
+})
 
-    /** 
-    * Adiciona um personagem à batalha.
-    * Ordena a lista por iniciativa (maior primeiro).
-    */
-
-    function adcionarPersonagem() {
-        if (!validarCadastroPersonagem()) return
-
-        const novoPersonagem = cirarObjetoPersonagem
+//Conecta o botão de eadcionar à função
+botaoAdicionarPersonagem.addEventListener('click', adicionarPersonagem)
 
 
-        //Inicializa o histórico de danos deste personagem
-        listaPersonagens.push(novoPersonagem)
-        listaPersonagens.sort(function (a, b) {
-            return b.iniciativa - a.iniciativa
-        })
-
-        limparCamposCadastro()
-        renderizarTabela()
-    }
-
-    /* 
-    Remove um personagem da batalha pelo seu id.
-    */
-
-    function removerPersonagem(idPersonagem) {
-        const confirmacao = confirm('Deseja realmente remover este personagem da batalha?')
-        if (!confirmacao) return    
-
-        listaPersonagens = listaPersonagens.filter(function (personagem) {
-            return personagem.id !== idPersonagem
-        })
-
-        delete historicoDano[idPersonagem]
-
-        //Ajusta o índice ativo se necessário
-        if (indicePersonagemAtivo >= listaPersonagens.length) {
-            indicePersonagemAtivo = 0
-        }
-
-        renderizarTabela()
-    }
-
-    /** 
-     * Deteccta cliques nos botões de remover dentro da tabala.
-     * Usamos delegação de eventos para capturar botões criados diinamicamente.
-      */
-     corpoTabela.addEventListener('click', function (evento) {
-        const botaoClicado = evento.target.closest('.botao--excluir')
-        if (!botaoClicado) return
-
-        const idPersonagem = Number(botaoClicado.dataset.id)
-        removerPersonagem(idPersonagem)
-     })
-
-     //Conecta o botão de eadcionar à função
-     botaoAdcionarPersonagem.addEventListener('click', adcionarPersonagem)
-
-     
-
-     renderizarTabela()
+renderizarTabela()
