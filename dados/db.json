@@ -1,3 +1,22 @@
 {
-  "personagens": []
+  "personagens": [
+    {
+      "jogador": "Wallace",
+      "nome": "Monge",
+      "iniciativa": 17,
+      "pvMaximo": 460,
+      "pvAtual": 460,
+      "historicoDanos": {},
+      "id": 2
+    },
+    {
+      "id": 1780117827408,
+      "jogador": "Felicio",
+      "nome": "barbaro",
+      "iniciativa": 5,
+      "pvMaximo": 150,
+      "pvAtual": 150,
+      "historicoDanos": {}
+    }
+  ]
 }

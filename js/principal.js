@@ -53,12 +53,66 @@ let historicoDanos = {}
 let temaClaro = false
 
 /* ============================================================
+   SEÇÃO 3 — COMUNICAÇÃO COM A API
+   Todas as funções que conversam com o JSON Server.
+   Centralizar aqui facilita manutenção futura.
+   ============================================================ */
+
+const URL_BASE = 'http://localhost:3000'
+
+/* 
+ Cusca todos os personagens salvos no servidor.
+*/
+
+async function buscarPersonagensNaApi() {
+    const resposta = await fetch(`${URL_BASE}/personagens`)
+    const personagens = await resposta.json()
+    return personagens
+}
+
+/* 
+    Salva um novo personagem no servidor.
+*/
+
+async function salvarPersonagemNaApi(personagem) {
+    const resposta = await fetch(`${URL_BASE}/personagens`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(personagem)
+    })
+    const personagemSalvo = await resposta.json()
+    return personagemSalvo
+}
+
+/* 
+ Atualiza os dados de um personagem no servidor.
+*/
+async function atualizarPersonagemNaApi(id, dadosAtualizados) {
+    const resposta = await fetch(`${URL_BASE}/personagens/${id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(dadosAtualizados)
+    })
+    const personagemAtualizado = await resposta.json()
+    return personagemAtualizado
+}
+
+/* 
+    Remove um personagem do servidor pelo seu id.
+*/
+async function removerPersonagemDaApi(id) {
+    await fetch(`${URL_BASE}/personagens/${id}`, {
+        method: 'DELETE'
+    })
+}
+
+/* ============================================================
 SEÇÃO 3 — FUNÇÕES DE RENDERIZAÇÃO
 Responsáveis por desenhar e atualizar a interface.
 ============================================================ */
 
 /*
-    *Coleta todos os números de turno que possuem;
+    * Coleta todos os números de turno que possuem;
     * Pelo menos um registro de dano no historico.
 */
 
@@ -300,43 +354,64 @@ function limparCamposCadastro() {
 * Ordena a lista por iniciativa (maior primeiro).
 */
 
-function adicionarPersonagem() {
+async function adicionarPersonagem() {
     if (!validarCadastroPersonagem()) return
 
     const novoPersonagem = criarObjetoPersonagem()
 
+    try {
+        // Salva no servidor e usa o objeto retornado
+        // pois o servidor pode modificar os dados (ex: gerar id próprio)
+        const personagemSalvo = await salvarPersonagemNaApi({
+            ...novoPersonagem,
+            historicoDanos: {}
+        })
 
-    //Inicializa o histórico de danos deste personagem
-    historicoDanos[novoPersonagem.id] = {}  
-    listaPersonagens.push(novoPersonagem)
-    listaPersonagens.sort(function (a, b) {
-        return b.iniciativa - a.iniciativa
-    })
+        // Inicializa o histórico local com o id retornado pelo servidor
+        historicoDanos[personagemSalvo.id] = {}
 
-    limparCamposCadastro()
-    renderizarTabela()
+        listaPersonagens.push(personagemSalvo)
+        listaPersonagens.sort(function (a, b) {
+            return b.iniciativa - a.iniciativa
+        })
+
+        limparCamposCadastro()
+        renderizarTabela()
+
+    } catch (erro) {
+        console.error('Erro ao adicionar personagem:', erro)
+        alert('Não foi possível salvar o personagem. Verifique se o servidor está rodando.')
+    }
 }
 
 /* 
 Remove um personagem da batalha pelo seu id.
 */
 
-function removerPersonagem(idPersonagem) {
+async function removerPersonagem(idPersonagem) {
     const confirmacao = confirm('Deseja realmente remover este personagem da batalha?')
     if (!confirmacao) return
 
-    listaPersonagens = listaPersonagens.filter(function (personagem) {
-        return personagem.id !== idPersonagem
-    })
+    try {
+        await removerPersonagemDaApi(idPersonagem)
 
-    delete historicoDanos[idPersonagem]
+        listaPersonagens = listaPersonagens.filter(function (personagem) {
+            return personagem.id !== idPersonagem
+        })
 
-    //Ajusta o índice ativo se necessário
-    if (indicePersonagemAtivo >= listaPersonagens.length) {
-        indicePersonagemAtivo = 0
+        delete historicoDanos[idPersonagem]
+
+        // Ajusta o índice ativo se necessário
+        if (indicePersonagemAtivo >= listaPersonagens.length) {
+            indicePersonagemAtivo = 0
+        }
+
+        renderizarTabela()
+
+    } catch (erro) {
+        console.error('Erro ao remover personagem:', erro)
+        alert('Não foi possível remover o personagem. Verifique se o servidor está rodando.')
     }
-
-    renderizarTabela()
 }
 
 /** 
@@ -394,25 +469,47 @@ function validarAcaoBatalha(campoValor, nomeCampo) {
  * Registra o dano no histórico do tuno atual.
  */
 
-function aplicarDano() {
+async function aplicarDano() {
     if (!validarAcaoBatalha(campoDano, 'o dano')) return
 
     const personagemAtivo = obterPersonagemAtivo()
     const valorDano = Number(campoDano.value)
 
-    //Subtrair o dano dos PV, sem deixar baixar a zero
-    personagemAtivo.pvAtual = Math.max(0, personagemAtivo.pvAtual - valorDano)
+    // Calcula o novo PV sem deixar abaixo de zero
+    const novoPv = Math.max(0, personagemAtivo.pvAtual - valorDano)
 
-    //Registrar no historico - acumula se já houver dano neste turno
+    // Acumula o dano no histórico local
     const danoAnterior = historicoDanos[personagemAtivo.id][turnoAtual] || 0
-    historicoDanos[personagemAtivo.id][turnoAtual] = danoAnterior + valorDano
+    const novoDanoNoTurno = danoAnterior + valorDano
 
-    campoDano.value = ''
-    renderizarTabela()
+    try {
+        // Atualiza o histórico de danos do turno atual
+        const historicoDanoAtualizado = {
+            ...historicoDanos[personagemAtivo.id],
+            [turnoAtual]: novoDanoNoTurno
+        }
 
-    //Avisar se o personagem chegou a zero
-    if (personagemAtivo.pvAtual === 0) {
-        alert(personagemAtivo.nome + 'chegou a 0 PV e está inconsciente!')
+        // Envia as atualizações para o servidor
+        await atualizarPersonagemNaApi(personagemAtivo.id, {
+            pvAtual: novoPv,
+            historicoDanos: historicoDanoAtualizado
+        })
+
+        // Atualiza o estado local somente após confirmação do servidor
+        personagemAtivo.pvAtual = novoPv
+        historicoDanos[personagemAtivo.id] = historicoDanoAtualizado
+
+        campoDano.value = ''
+        renderizarTabela()
+
+        // Avisa se o personagem chegou a zero
+        if (personagemAtivo.pvAtual === 0) {
+            alert(personagemAtivo.nome + ' chegou a 0 PV e está inconsciente!')
+        }
+
+    } catch (erro) {
+        console.error('Erro ao aplicar dano:', erro)
+        alert('Não foi possível aplicar o dano. Verifique se o servidor está rodando.')
     }
 }
 
@@ -421,20 +518,34 @@ function aplicarDano() {
  * PV não pode sultrapassar o valor máximo.
  */
 
-function aplicarCura() {
+async function aplicarCura() {
     if (!validarAcaoBatalha(campoCura, 'a cura')) return
 
     const personagemAtivo = obterPersonagemAtivo()
     const valorCura = Number(campoCura.value)
 
-    //Soma a cura nos PV, sem ultrapassar o máximo
-    personagemAtivo.pvAtual = Math.min(
+    // Calcula o novo PV sem ultrapassar o máximo
+    const novoPv = Math.min(
         personagemAtivo.pvMaximo,
         personagemAtivo.pvAtual + valorCura
     )
 
-    campoCura.value = ''
-    renderizarTabela()
+    try {
+        // Envia a atualização para o servidor
+        await atualizarPersonagemNaApi(personagemAtivo.id, {
+            pvAtual: novoPv
+        })
+
+        // Atualiza o estado local somente após confirmação do servidor
+        personagemAtivo.pvAtual = novoPv
+
+        campoCura.value = ''
+        renderizarTabela()
+
+    } catch (erro) {
+        console.error('Erro ao aplicar cura:', erro)
+        alert('Não foi possível aplicar a cura. Verifique se o servidor está rodando.')
+    }
 }
 
 /**
@@ -470,9 +581,9 @@ botaoProximoTurno.addEventListener('click', avancarTurno)
    Responsável por alternar entre modo escuro e claro.
    ============================================================ */
 
-   /*
-     Alterna entre o tema escuro eo tema claro.
-   */
+/*
+  Alterna entre o tema escuro eo tema claro.
+*/
 function alternarTema() {
     temaClaro = !temaClaro
 
@@ -489,15 +600,30 @@ botaoTema.addEventListener('click', alternarTema)
    Ponto de entrada da aplicação — executa ao carregar a página.
    ============================================================ */
 
-   /* 
-     Inicializa a aplicação.
-   */
+/* 
+  Inicializa a aplicação.
+*/
 
-     function inicializar() {
+async function inicializar() {
+    try {
+        const personagensSalvos = await buscarPersonagensNaApi()
+
+        listaPersonagens = personagensSalvos.sort(function (a, b) {
+            return b.iniciativa - a.iniciativa
+        })
+
+        //Reconstrói o histórico de danos a partir dos dados salvos
+        listaPersonagens.forEach(function (personagem) {
+            historicoDanos[personagem.id] = personagem.historicoDanos || {}
+        })
+
         renderizarTabela()
-     }
+    } catch (erro) {
+        console.error('Erro ao carregar personagens:', erro)
+    }
+}
 
-     inicializar()
+inicializar()
 
 
 
