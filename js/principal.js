@@ -588,22 +588,22 @@ const toastContainer = document.getElementById('toastContainer')
  */
 
 function exibirToast(mensagem, tipo = 'info', duracao = 3000) {
-    const toast = document.createElement('div')
-    toast.className = `toast toast--${tipo}`
+  const toast = document.createElement('div')
+  toast.className = `toast toast--${tipo}`
 
-    //Ícone de acordo com o tipo
-    const icones = {
-        sucesso: '✅',
-        erro: '❌',
-        aviso: '⚠️',
-        info: '💬'
-    }
+  const icones = {
+    sucesso: '✅',
+    erro:    '❌',
+    aviso:   '⚠️',
+    info:    '💬'
+  }
 
-    toast.innerHTML = `
-        <span>${icones[tipo] || '💬'}</span>
-        <span>${mensagem}</span>
-    `
-    toastContainer.appendChild(toast)
+  toast.innerHTML = `
+    <span>${icones[tipo] || '💬'}</span>
+    <span>${mensagem}</span>
+  `
+
+  toastContainer.appendChild(toast)
 
   // Duplo requestAnimationFrame — garante que o navegador pintou
   // o estado inicial (invisível) antes de iniciar a transição

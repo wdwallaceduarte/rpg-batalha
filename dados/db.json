@@ -1,23 +1,33 @@
 {
   "personagens": [
     {
-      "id": 1780161434400,
+      "id": 1780169737553,
       "jogador": "wallace",
-      "nome": "monge",
+      "nome": "jao",
       "iniciativa": 15,
       "pvMaximo": 100,
-      "pvAtual": 83,
+      "pvAtual": 90,
       "historicoDanos": {
-        "1": 15,
-        "2": 5,
-        "3": 75,
-        "4": 5,
-        "7": 4,
-        "8": 5,
-        "9": 5,
-        "10": 50,
-        "11": 5
+        "1": 15
       }
+    },
+    {
+      "id": 1780183463872,
+      "jogador": "felicio",
+      "nome": "barbaro",
+      "iniciativa": 12,
+      "pvMaximo": 150,
+      "pvAtual": 150,
+      "historicoDanos": {}
+    },
+    {
+      "id": 1780183521484,
+      "jogador": "paula",
+      "nome": "mago",
+      "iniciativa": 12,
+      "pvMaximo": 90,
+      "pvAtual": 90,
+      "historicoDanos": {}
     }
   ]
 }

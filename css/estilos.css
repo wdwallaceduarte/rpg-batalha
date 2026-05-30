@@ -178,8 +178,9 @@ body {
 }
 
 .painel-controle__acoes-batalha {
-  display: flex;
-  gap: var(--espaco-pequeno);
+  width: 100%;
+  /* display: flex;
+  gap: var(--espaco-pequeno); */
 }
 
 .painel-controle__coluna {

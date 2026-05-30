@@ -42,33 +42,29 @@
 
       <!-- Controle de dano e cura -->
       <div class="painel-controle__grupo" id="grupoAcoesBatalha">
-        <h2 class="painel-controle__titulo">Ações de Batalha</h2>
+  <h2 class="painel-controle__titulo">Ações de Batalha</h2>
 
-        <div class="painel-controle__acoes-batalha">
+  <div class="painel-controle__acoes-batalha">
+    <div class="painel-controle__coluna">
+      <input class="campo-texto" type="number" id="campoDano" placeholder="Valor do dano" />
+      <button class="botao botao--dano" id="botaoAplicarDano">
+        🗡️ Aplicar Dano
+      </button>
+    </div>
 
-          <div class="painel-controle__coluna">
-            <input class="campo-texto" type="number" id="campoDano" placeholder="Valor do dano" />
-            <button class="botao botao--dano" id="botaoAplicarDano">
-              🗡️ Aplicar Dano
-            </button>
-          </div>
+    <div class="painel-controle__coluna">
+      <input class="campo-texto" type="number" id="campoCura" placeholder="Valor da cura" />
+      <button class="botao botao--cura" id="botaoAplicarCura">
+        💚 Aplicar Cura
+      </button>
+    </div>
+  </div>
 
-          <div class="painel-controle__coluna">
-            <input class="campo-texto" type="number" id="campoCura" placeholder="Valor da cura" />
-            <button class="botao botao--cura" id="botaoAplicarCura">
-              💚 Aplicar Cura
-            </button>
-          </div>
+  <button class="botao botao--proximo botao--largura-total" id="botaoProximoTurno">
+    ⏭️ Próximo Turno
+  </button>
 
-          <div class="painel-controle__coluna">
-            <div class="painel-controle__coluna-vazia"></div>
-            <button class="botao botao--proximo" id="botaoProximoTurno">
-              ⏭️ Próximo Turno
-            </button>
-          </div>
-
-        </div>
-      </div>
+</div>
 
     </section>
 
