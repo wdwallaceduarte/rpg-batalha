@@ -18,7 +18,7 @@ const botaoAdicionarPersonagem = document.getElementById('botaoAdicionarPersonag
 const campoDano = document.getElementById('campoDano')
 const campoCura = document.getElementById('campoCura')
 
-//BOTÕES DE BALHATA
+//BOTÕES DE BATALHA
 const botaoAplicarDano = document.getElementById('botaoAplicarDano')
 const botaoAplicarCura = document.getElementById('botaoAplicarCura')
 const botaoProximoTurno = document.getElementById('botaoProximoTurno')
@@ -61,7 +61,7 @@ let temaClaro = false
 const URL_BASE = 'http://localhost:3000'
 
 /* 
- Cusca todos os personagens salvos no servidor.
+ Busca todos os personagens salvos no servidor.
 */
 
 async function buscarPersonagensNaApi() {
@@ -107,7 +107,7 @@ async function removerPersonagemDaApi(id) {
 }
 
 /* ============================================================
-SEÇÃO 3 — FUNÇÕES DE RENDERIZAÇÃO
+SEÇÃO 4 — FUNÇÕES DE RENDERIZAÇÃO
 Responsáveis por desenhar e atualizar a interface.
 ============================================================ */
 
@@ -295,7 +295,7 @@ function validarCadastroPersonagem() {
     const pontosDeVida = Number(campoPontosDeVida.value)
 
     if (!nomeJogador) {
-        exibirToast('Por favor, informe o noome do jogador.', 'aviso')
+        exibirToast('Por favor, informe o nome do jogador.', 'aviso')
         return false
     }
 
@@ -404,7 +404,7 @@ async function removerPersonagem(idPersonagem) {
         }
 
         renderizarTabela()
-        exibirToast('Personagem removido da tabalha.', 'aviso')
+        exibirToast('Personagem removido da batalha.', 'aviso')
 
     } catch (erro) {
         console.error('Erro ao remover personagem:', erro)
@@ -424,7 +424,7 @@ corpoTabela.addEventListener('click', function (evento) {
     removerPersonagem(idPersonagem)
 })
 
-//Conecta o botão de eadcionar à função
+//Conecta o botão de adicionar à função
 botaoAdicionarPersonagem.addEventListener('click', adicionarPersonagem)
 
 /* ============================================================
@@ -539,7 +539,7 @@ async function aplicarCura() {
 
         campoCura.value = ''
         renderizarTabela()
-        exibirToast(`${valorCura} de cura em ${personagemAtivo}!`, 'sucesso')
+        exibirToast(`${valorCura} de cura em ${personagemAtivo.nome}!`, 'sucesso')
 
     } catch (erro) {
         console.error('Erro ao aplicar cura:', erro)
@@ -555,7 +555,7 @@ async function aplicarCura() {
 
 function avancarTurno() {
     if (listaPersonagens.length === 0) {
-        alert('Nenhum personagem cadastrado na batalha!')
+        exibirToast('Nenhum personagem cadastrado na batalha!', 'aviso')
         return
     }
 
@@ -605,19 +605,29 @@ function exibirToast(mensagem, tipo = 'info', duracao = 3000) {
     `
     toastContainer.appendChild(toast)
 
-    //Inicia a animação de saída antes de remover
-    setTimeout(function() {
-        toast.classList.add('toast--saindo')
+  // Duplo requestAnimationFrame — garante que o navegador pintou
+  // o estado inicial (invisível) antes de iniciar a transição
+  requestAnimationFrame(function() {
+    requestAnimationFrame(function() {
+      toast.classList.add('toast--visivel')
+    })
+  })
 
-        //Remove o elemento após a animação terminar
-        setTimeout(function () {
-            toast.remove()
-        }, 400)
-    }, duracao);
+  // Após a duração, inicia a saída
+  setTimeout(function() {
+    toast.classList.remove('toast--visivel')
+    toast.classList.add('toast--saindo')
+
+    // Remove o elemento após a transição terminar
+    setTimeout(function() {
+      toast.remove()
+    }, 400)
+  }, duracao)
 }
 
+
 /* ============================================================
-   SEÇÃO 6 — FUNÇÕES DE TEMA
+   SEÇÃO 7 — FUNÇÕES DE TEMA
    Responsável por alternar entre modo escuro e claro.
    ============================================================ */
 
@@ -636,7 +646,7 @@ function alternarTema() {
 botaoTema.addEventListener('click', alternarTema)
 
 /* ============================================================
-   SEÇÃO 7 — INICIALIZAÇÃO
+   SEÇÃO 8 — INICIALIZAÇÃO
    Ponto de entrada da aplicação — executa ao carregar a página.
    ============================================================ */
 
@@ -659,7 +669,7 @@ async function inicializar() {
 
         renderizarTabela()
     } catch (erro) {
-        exibirToast('Erro ao carregar personagens. Verifique o servicor', 'erro')
+        exibirToast('Erro ao carregar personagens. Verifique o servidor', 'erro')
     }
 }
 

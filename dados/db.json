@@ -1,24 +1,23 @@
 {
   "personagens": [
     {
-      "jogador": "Wallace",
-      "nome": "Monge",
-      "iniciativa": 17,
-      "pvMaximo": 460,
-      "pvAtual": 449,
+      "id": 1780161434400,
+      "jogador": "wallace",
+      "nome": "monge",
+      "iniciativa": 15,
+      "pvMaximo": 100,
+      "pvAtual": 83,
       "historicoDanos": {
-        "1": 16
-      },
-      "id": 2
-    },
-    {
-      "id": 1780117827408,
-      "jogador": "Felicio",
-      "nome": "barbaro",
-      "iniciativa": 5,
-      "pvMaximo": 150,
-      "pvAtual": 150,
-      "historicoDanos": {}
+        "1": 15,
+        "2": 5,
+        "3": 75,
+        "4": 5,
+        "7": 4,
+        "8": 5,
+        "9": 5,
+        "10": 50,
+        "11": 5
+      }
     }
   ]
 }
