@@ -5,8 +5,10 @@
       "nome": "Monge",
       "iniciativa": 17,
       "pvMaximo": 460,
-      "pvAtual": 460,
-      "historicoDanos": {},
+      "pvAtual": 449,
+      "historicoDanos": {
+        "1": 16
+      },
       "id": 2
     },
     {

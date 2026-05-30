@@ -295,26 +295,22 @@ function validarCadastroPersonagem() {
     const pontosDeVida = Number(campoPontosDeVida.value)
 
     if (!nomeJogador) {
-        alert('Por favor, informe o noome do jogador.')
-        campoJogador.focus()
+        exibirToast('Por favor, informe o noome do jogador.', 'aviso')
         return false
     }
 
     if (!nomePersonagem) {
-        alert('Por favor, informe o nome do personagem.')
-        campoPersonagem.focus()
+        exibirToast('Por favor, informe o nome do personagem.', 'aviso')
         return false
     }
 
     if (!campoIniciativa.value || isNaN(iniciativa)) {
-        alert('Por favor, informe um valor de iniciativa válido.')
-        campoIniciativa.focus()
+        exibirToast('Por favor, informe um valor de iniciativa válido.', 'aviso')
         return false
     }
 
     if (!campoPontosDeVida.value || isNaN(pontosDeVida) || pontosDeVida <= 0) {
-        alert('Por favor, informe um valor de PV válido e maior que zero.')
-        campoPontosDeVida.focus()
+        exibirToast('Por favor, informe um valor de PV válido e maior que zero.', 'aviso')
         return false
     }
 
@@ -377,10 +373,11 @@ async function adicionarPersonagem() {
 
         limparCamposCadastro()
         renderizarTabela()
+        exibirToast(`${personagemSalvo.nome} entrou na batalha!`, 'sucesso')
 
     } catch (erro) {
         console.error('Erro ao adicionar personagem:', erro)
-        alert('Não foi possível salvar o personagem. Verifique se o servidor está rodando.')
+        exibirToast('Não foi possível salvar o personagem. Verifique se o servidor está rodando.', 'erro')
     }
 }
 
@@ -407,10 +404,11 @@ async function removerPersonagem(idPersonagem) {
         }
 
         renderizarTabela()
+        exibirToast('Personagem removido da tabalha.', 'aviso')
 
     } catch (erro) {
         console.error('Erro ao remover personagem:', erro)
-        alert('Não foi possível remover o personagem. Verifique se o servidor está rodando.')
+        exibirToast('Não foi possível remover o personagem. Verifique se o servidor está rodando.', 'erro')
     }
 }
 
@@ -449,15 +447,14 @@ function obterPersonagemAtivo() {
 
 function validarAcaoBatalha(campoValor, nomeCampo) {
     if (listaPersonagens.length === 0) {
-        alert('Nenhum personagem no campo de batalha!')
+        exibirToast('Nenhum personagem no campo de batalha!', 'aviso')
         return false
     }
 
     const valor = Number(campoValor.value)
 
     if (!campoValor.value || isNaN(valor) || valor <= 0) {
-        alert('Por favor, informe um valor válido para ' + nomeCampo + '.')
-        campoValor.focus()
+        exibirToast('Por favor, informe um valor válido para ' + nomeCampo + '.', 'aviso')
         return false
     }
 
@@ -501,15 +498,16 @@ async function aplicarDano() {
 
         campoDano.value = ''
         renderizarTabela()
+        exibirToast(`${valorDano} de dano em ${personagemAtivo.nome}!`, 'erro')
 
         // Avisa se o personagem chegou a zero
         if (personagemAtivo.pvAtual === 0) {
-            alert(personagemAtivo.nome + ' chegou a 0 PV e está inconsciente!')
+            exibirToast(`${personagemAtivo.nome} chegou a 0 PV e está inconsciente!`, 'aviso', 5000)
         }
 
     } catch (erro) {
         console.error('Erro ao aplicar dano:', erro)
-        alert('Não foi possível aplicar o dano. Verifique se o servidor está rodando.')
+        exibirToast('Não foi possível aplicar o dano. Verifique se o servidor está rodando.', 'erro')
     }
 }
 
@@ -541,10 +539,11 @@ async function aplicarCura() {
 
         campoCura.value = ''
         renderizarTabela()
+        exibirToast(`${valorCura} de cura em ${personagemAtivo}!`, 'sucesso')
 
     } catch (erro) {
         console.error('Erro ao aplicar cura:', erro)
-        alert('Não foi possível aplicar a cura. Verifique se o servidor está rodando.')
+        exibirToast('Não foi possível aplicar a cura. Verifique se o servidor está rodando.', 'erro')
     }
 }
 
@@ -575,6 +574,47 @@ function avancarTurno() {
 botaoAplicarDano.addEventListener('click', aplicarDano)
 botaoAplicarCura.addEventListener('click', aplicarCura)
 botaoProximoTurno.addEventListener('click', avancarTurno)
+
+/* ============================================================
+   SEÇÃO 6 — NOTIFICAÇÕES TOAST
+   Responsável por exibir mensagens visuais ao usuário.
+   ============================================================ */
+
+const toastContainer = document.getElementById('toastContainer')
+
+/**
+ * Exibe uma notificação toast na tela.
+ * A notificação some automaticamente após o tempo definido.
+ */
+
+function exibirToast(mensagem, tipo = 'info', duracao = 3000) {
+    const toast = document.createElement('div')
+    toast.className = `toast toast--${tipo}`
+
+    //Ícone de acordo com o tipo
+    const icones = {
+        sucesso: '✅',
+        erro: '❌',
+        aviso: '⚠️',
+        info: '💬'
+    }
+
+    toast.innerHTML = `
+        <span>${icones[tipo] || '💬'}</span>
+        <span>${mensagem}</span>
+    `
+    toastContainer.appendChild(toast)
+
+    //Inicia a animação de saída antes de remover
+    setTimeout(function() {
+        toast.classList.add('toast--saindo')
+
+        //Remove o elemento após a animação terminar
+        setTimeout(function () {
+            toast.remove()
+        }, 400)
+    }, duracao);
+}
 
 /* ============================================================
    SEÇÃO 6 — FUNÇÕES DE TEMA
@@ -619,7 +659,7 @@ async function inicializar() {
 
         renderizarTabela()
     } catch (erro) {
-        console.error('Erro ao carregar personagens:', erro)
+        exibirToast('Erro ao carregar personagens. Verifique o servicor', 'erro')
     }
 }
 
