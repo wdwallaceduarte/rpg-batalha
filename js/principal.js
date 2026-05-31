@@ -105,9 +105,9 @@ function exibirToast(mensagem, tipo = 'info', duracao = 3000) {
 
   const icones = {
     sucesso: '✅',
-    erro:    '❌',
-    aviso:   '⚠️',
-    info:    '💬'
+    erro: '❌',
+    aviso: '⚠️',
+    info: '💬'
   }
 
   toast.innerHTML = `
@@ -119,7 +119,7 @@ function exibirToast(mensagem, tipo = 'info', duracao = 3000) {
 
   // Remove o elemento após a animação terminar
   const duracaoTotal = duracao > 3000 ? 5700 : 3700
-  setTimeout(function() {
+  setTimeout(function () {
     toast.remove()
   }, duracaoTotal)
 }
@@ -131,14 +131,14 @@ function exibirToast(mensagem, tipo = 'info', duracao = 3000) {
 function obterTurnosComDano() {
   const turnosEncontrados = new Set()
 
-  listaPersonagens.forEach(function(personagem) {
+  listaPersonagens.forEach(function (personagem) {
     const danosDoPersonagem = historicoDanos[personagem.id] || {}
-    Object.keys(danosDoPersonagem).forEach(function(turno) {
+    Object.keys(danosDoPersonagem).forEach(function (turno) {
       turnosEncontrados.add(Number(turno))
     })
   })
 
-  return Array.from(turnosEncontrados).sort(function(a, b) {
+  return Array.from(turnosEncontrados).sort(function (a, b) {
     return a - b
   })
 }
@@ -152,7 +152,7 @@ function renderizarCabecalhoTabela(turnosComDano) {
     <th class="tabela-batalha__cabecalho-celula">Personagem</th>
   `
 
-  turnosComDano.forEach(function(numeroTurno) {
+  turnosComDano.forEach(function (numeroTurno) {
     const celula = document.createElement('th')
     celula.className = 'tabela-batalha__cabecalho-celula'
     celula.textContent = 'T' + numeroTurno
@@ -182,7 +182,7 @@ function criarLinhaPersonagem(personagem, indice, turnosComDano) {
     <td class="tabela-batalha__celula">${estadoAtivo ? '⚔️ ' : ''}${personagem.nome}</td>
   `
 
-  turnosComDano.forEach(function(numeroTurno) {
+  turnosComDano.forEach(function (numeroTurno) {
     const danoNoTurno = (historicoDanos[personagem.id] || {})[numeroTurno]
     const celula = document.createElement('td')
     celula.className = 'tabela-batalha__celula'
@@ -239,7 +239,7 @@ function renderizarTabela() {
     return
   }
 
-  listaPersonagens.forEach(function(personagem, indice) {
+  listaPersonagens.forEach(function (personagem, indice) {
     const linha = criarLinhaPersonagem(personagem, indice, turnosComDano)
     corpoTabela.appendChild(linha)
   })
@@ -250,10 +250,10 @@ function renderizarTabela() {
    ============================================================ */
 
 function validarCadastroPersonagem() {
-  const nomeJogador   = campoJogador.value.trim()
+  const nomeJogador = campoJogador.value.trim()
   const nomePersonagem = campoPersonagem.value.trim()
-  const iniciativa    = Number(campoIniciativa.value)
-  const pontosDeVida  = Number(campoPontosDeVida.value)
+  const iniciativa = Number(campoIniciativa.value)
+  const pontosDeVida = Number(campoPontosDeVida.value)
 
   if (!nomeJogador) {
     exibirToast('Por favor, informe o nome do jogador.', 'aviso')
@@ -278,19 +278,19 @@ function validarCadastroPersonagem() {
 
 function criarObjetoPersonagem() {
   return {
-    id:         Date.now(),
-    jogador:    campoJogador.value.trim(),
-    nome:       campoPersonagem.value.trim(),
+    id: Date.now(),
+    jogador: campoJogador.value.trim(),
+    nome: campoPersonagem.value.trim(),
     iniciativa: Number(campoIniciativa.value),
-    pvMaximo:   Number(campoPontosDeVida.value),
-    pvAtual:    Number(campoPontosDeVida.value)
+    pvMaximo: Number(campoPontosDeVida.value),
+    pvAtual: Number(campoPontosDeVida.value)
   }
 }
 
 function limparCamposCadastro() {
-  campoJogador.value      = ''
-  campoPersonagem.value   = ''
-  campoIniciativa.value   = ''
+  campoJogador.value = ''
+  campoPersonagem.value = ''
+  campoIniciativa.value = ''
   campoPontosDeVida.value = ''
   campoJogador.focus()
 }
@@ -309,13 +309,13 @@ async function adicionarPersonagem() {
     historicoDanos[personagemSalvo.id] = {}
 
     listaPersonagens.push(personagemSalvo)
-    listaPersonagens.sort(function(a, b) {
+    listaPersonagens.sort(function (a, b) {
       return b.iniciativa - a.iniciativa
     })
 
+    exibirToast(`${personagemSalvo.nome} entrou na batalha!`, 'sucesso')
     limparCamposCadastro()
     renderizarTabela()
-    exibirToast(`${personagemSalvo.nome} entrou na batalha!`, 'sucesso')
 
   } catch (erro) {
     console.error('Erro ao adicionar personagem:', erro)
@@ -330,7 +330,7 @@ async function removerPersonagem(idPersonagem) {
   try {
     await removerPersonagemDaApi(idPersonagem)
 
-    listaPersonagens = listaPersonagens.filter(function(personagem) {
+    listaPersonagens = listaPersonagens.filter(function (personagem) {
       return personagem.id !== idPersonagem
     })
 
@@ -340,8 +340,8 @@ async function removerPersonagem(idPersonagem) {
       indicePersonagemAtivo = 0
     }
 
-    renderizarTabela()
     exibirToast('Personagem removido da batalha.', 'aviso')
+    renderizarTabela()
 
   } catch (erro) {
     console.error('Erro ao remover personagem:', erro)
@@ -349,7 +349,7 @@ async function removerPersonagem(idPersonagem) {
   }
 }
 
-corpoTabela.addEventListener('click', function(evento) {
+corpoTabela.addEventListener('click', function (evento) {
   const botaoClicado = evento.target.closest('.botao--excluir')
   if (!botaoClicado) return
 
@@ -387,9 +387,9 @@ async function aplicarDano() {
   if (!validarAcaoBatalha(campoDano, 'o dano')) return
 
   const personagemAtivo = obterPersonagemAtivo()
-  const valorDano       = Number(campoDano.value)
-  const novoPv          = Math.max(0, personagemAtivo.pvAtual - valorDano)
-  const danoAnterior    = historicoDanos[personagemAtivo.id][turnoAtual] || 0
+  const valorDano = Number(campoDano.value)
+  const novoPv = Math.max(0, personagemAtivo.pvAtual - valorDano)
+  const danoAnterior = historicoDanos[personagemAtivo.id][turnoAtual] || 0
   const novoDanoNoTurno = danoAnterior + valorDano
 
   try {
@@ -399,16 +399,16 @@ async function aplicarDano() {
     }
 
     await atualizarPersonagemNaApi(personagemAtivo.id, {
-      pvAtual:        novoPv,
+      pvAtual: novoPv,
       historicoDanos: historicoDanoAtualizado
     })
 
     personagemAtivo.pvAtual = novoPv
     historicoDanos[personagemAtivo.id] = historicoDanoAtualizado
 
-    campoDano.value = ''
-    renderizarTabela()
     exibirToast(`${valorDano} de dano em ${personagemAtivo.nome}!`, 'erro')
+    renderizarTabela()
+    campoDano.value = ''
 
     if (personagemAtivo.pvAtual === 0) {
       exibirToast(`${personagemAtivo.nome} chegou a 0 PV e está inconsciente!`, 'aviso', 5000)
@@ -424,8 +424,8 @@ async function aplicarCura() {
   if (!validarAcaoBatalha(campoCura, 'a cura')) return
 
   const personagemAtivo = obterPersonagemAtivo()
-  const valorCura       = Number(campoCura.value)
-  const novoPv          = Math.min(personagemAtivo.pvMaximo, personagemAtivo.pvAtual + valorCura)
+  const valorCura = Number(campoCura.value)
+  const novoPv = Math.min(personagemAtivo.pvMaximo, personagemAtivo.pvAtual + valorCura)
 
   try {
     await atualizarPersonagemNaApi(personagemAtivo.id, {
@@ -434,9 +434,9 @@ async function aplicarCura() {
 
     personagemAtivo.pvAtual = novoPv
 
-    campoCura.value = ''
-    renderizarTabela()
     exibirToast(`${valorCura} de cura em ${personagemAtivo.nome}!`, 'sucesso')
+    renderizarTabela()
+    campoCura.value = ''
 
   } catch (erro) {
     console.error('Erro ao aplicar cura:', erro)
@@ -485,11 +485,11 @@ async function inicializar() {
   try {
     const personagensSalvos = await buscarPersonagensNaApi()
 
-    listaPersonagens = personagensSalvos.sort(function(a, b) {
+    listaPersonagens = personagensSalvos.sort(function (a, b) {
       return b.iniciativa - a.iniciativa
     })
 
-    listaPersonagens.forEach(function(personagem) {
+    listaPersonagens.forEach(function (personagem) {
       historicoDanos[personagem.id] = personagem.historicoDanos || {}
     })
 
