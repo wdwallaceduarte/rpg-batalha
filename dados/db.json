@@ -1,8 +1,8 @@
 {
   "personagens": [
     {
-      "id": 1780190246165,
-      "jogador": "wallace",
+      "id": 1780432208457,
+      "jogador": "wlalcae",
       "nome": "jao",
       "iniciativa": 15,
       "pvMaximo": 100,
@@ -10,13 +10,15 @@
       "historicoDanos": {}
     },
     {
-      "id": 1780190275286,
-      "jogador": "wallace",
-      "nome": "felicio",
-      "iniciativa": 150,
-      "pvMaximo": 50,
-      "pvAtual": 50,
-      "historicoDanos": {}
+      "id": 1780432880855,
+      "jogador": "felicio",
+      "nome": "barbaro",
+      "iniciativa": 11,
+      "pvMaximo": 150,
+      "pvAtual": 135,
+      "historicoDanos": {
+        "1": 15
+      }
     }
   ]
 }
