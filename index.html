@@ -5,6 +5,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>RPG Batalha 🎲🎲🎲</title>
+  <link rel="shortcut icon" href="./d.ico" type="image/x-icon">
   <link rel="stylesheet" href="css/estilos.css" />
 </head>
 
@@ -42,44 +43,44 @@
 
       <!-- Controle de dano e cura -->
       <div class="painel-controle__grupo" id="grupoAcoesBatalha">
-  <h2 class="painel-controle__titulo">Ações de Batalha</h2>
+        <h2 class="painel-controle__titulo">Ações de Batalha</h2>
 
-  <div class="painel-controle__acoes-batalha">
+        <!-- Seletor de alvo -->
+        <div class="painel-controle__seletor-alvo">
+            <label class="painel-controle__label" for="seletorAlvo" >
+              <strong>🎯 ALVO</strong>
+            </label>
+            <select 
+              class="campo-texto campo-select"
+              id="seletorAlvo">
+              <option value=""> - Seleciona o alvo - </option>
+            </select>
+        </div>
 
-    <div class="painel-controle__linha-superior">
-      <div class="painel-controle__coluna">
-        <input
-          class="campo-texto"
-          type="number"
-          id="campoDano"
-          placeholder="Valor do dano"
-        />
-        <button class="botao botao--dano" id="botaoAplicarDano">
-          🗡️ Aplicar Dano
-        </button>
+        <div class="painel-controle__acoes-batalha">
+
+          <div class="painel-controle__linha-superior">
+            <div class="painel-controle__coluna">
+              <input class="campo-texto" type="number" id="campoDano" placeholder="Valor do dano" />
+              <button class="botao botao--dano" id="botaoAplicarDano">
+                🗡️ Aplicar Dano
+              </button>
+            </div>
+
+            <div class="painel-controle__coluna">
+              <input class="campo-texto" type="number" id="campoCura" placeholder="Valor da cura" />
+              <button class="botao botao--cura" id="botaoAplicarCura">
+                💚 Aplicar Cura
+              </button>
+            </div>
+          </div>
+
+          <button class="botao botao--proximo painel-controle__botao-turno" id="botaoProximoTurno">
+            ⏭️ Próximo Turno
+          </button>
+
+        </div>
       </div>
-
-      <div class="painel-controle__coluna">
-        <input
-          class="campo-texto"
-          type="number"
-          id="campoCura"
-          placeholder="Valor da cura"
-        />
-        <button class="botao botao--cura" id="botaoAplicarCura">
-          💚 Aplicar Cura
-        </button>
-      </div>
-    </div>
-
-    <button
-      class="botao botao--proximo painel-controle__botao-turno"
-      id="botaoProximoTurno">
-      ⏭️ Próximo Turno
-    </button>
-
-  </div>
-</div>
 
     </section>
 
@@ -116,7 +117,7 @@
 
   <!-- NOTIFICAÇÕES TOAST -->
   <div class="toast-container" id="toastContainer"></div>
-  <script src="js/principal.js"></script>
+  <script src="./js/principal.js"></script>
 </body>
 
 </html>

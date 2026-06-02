@@ -1,3 +1,4 @@
+
 /* ============================================================
    SEÇÃO 1 — SELEÇÃO DE ELEMENTOS
    Capturamos aqui todos os elementos do HTML que o JavaScript
@@ -15,6 +16,7 @@ const campoPontosDeVida = document.getElementById('campoPontosDeVida')
 const botaoAdicionarPersonagem = document.getElementById('botaoAdicionarPersonagem')
 
 //CAMPOS DE BATALHA
+let seletorAlvo = document.getElementById('seletorAlvo')
 const campoDano = document.getElementById('campoDano')
 const campoCura = document.getElementById('campoCura')
 
@@ -98,11 +100,6 @@ function exibirToast(mensagem, tipo = 'info', duracao = 3000) {
   const toast = document.createElement('div')
   toast.className = `toast toast--${tipo}`
 
-  // Toast com duração maior usa classe especial
-  if (duracao > 3000) {
-    toast.classList.add('toast--longa')
-  }
-
   const icones = {
     sucesso: '✅',
     erro: '❌',
@@ -117,7 +114,7 @@ function exibirToast(mensagem, tipo = 'info', duracao = 3000) {
 
   toastContainer.appendChild(toast)
 
-  // Remove o elemento após a animação terminar
+  // A animação CSS cuida de tudo — só precisamos remover o elemento após terminar
   const duracaoTotal = duracao > 3000 ? 5700 : 3700
   setTimeout(function () {
     toast.remove()
@@ -145,25 +142,30 @@ function obterTurnosComDano() {
 
 function renderizarCabecalhoTabela(turnosComDano) {
   const linhaCabecalho = tabelaBatalha.querySelector('thead tr')
+  linhaCabecalho.innerHTML = ''
 
-  linhaCabecalho.innerHTML = `
-    <th class="tabela-batalha__cabecalho-celula">Iniciativa</th>
-    <th class="tabela-batalha__cabecalho-celula">Jogador</th>
-    <th class="tabela-batalha__cabecalho-celula">Personagem</th>
-  `
-
-  turnosComDano.forEach(function (numeroTurno) {
-    const celula = document.createElement('th')
-    celula.className = 'tabela-batalha__cabecalho-celula'
-    celula.textContent = 'T' + numeroTurno
-    linhaCabecalho.appendChild(celula)
+  const colunas = ['Iniciativa', 'Jogador', 'Personagem']
+  colunas.forEach(function (nome) {
+    const th = document.createElement('th')
+    th.className = 'tabela-batalha__cabecalho-celula'
+    th.textContent = nome
+    linhaCabecalho.appendChild(th)
   })
 
-  linhaCabecalho.innerHTML += `
-    <th class="tabela-batalha__cabecalho-celula">PV Máx.</th>
-    <th class="tabela-batalha__cabecalho-celula">PV Atual</th>
-    <th class="tabela-batalha__cabecalho-celula">Ações</th>
-  `
+  turnosComDano.forEach(function (numeroTurno) {
+    const th = document.createElement('th')
+    th.className = 'tabela-batalha__cabecalho-celula'
+    th.textContent = 'T' + numeroTurno
+    linhaCabecalho.appendChild(th)
+  })
+
+  const colunasFinais = ['PV Máx.', 'PV Atual', 'Ações']
+  colunasFinais.forEach(function (nome) {
+    const th = document.createElement('th')
+    th.className = 'tabela-batalha__cabecalho-celula'
+    th.textContent = nome
+    linhaCabecalho.appendChild(th)
+  })
 }
 
 function criarLinhaPersonagem(personagem, indice, turnosComDano) {
@@ -176,44 +178,66 @@ function criarLinhaPersonagem(personagem, indice, turnosComDano) {
     linha.classList.add('tabela-batalha__linha--ativa')
   }
 
-  linha.innerHTML = `
-    <td class="tabela-batalha__celula">${personagem.iniciativa}</td>
-    <td class="tabela-batalha__celula">${personagem.jogador}</td>
-    <td class="tabela-batalha__celula">${estadoAtivo ? '⚔️ ' : ''}${personagem.nome}</td>
-  `
+  // Célula de iniciativa
+  const tdIniciativa = document.createElement('td')
+  tdIniciativa.className = 'tabela-batalha__celula'
+  tdIniciativa.textContent = personagem.iniciativa
+  linha.appendChild(tdIniciativa)
 
+  // Célula de jogador
+  const tdJogador = document.createElement('td')
+  tdJogador.className = 'tabela-batalha__celula'
+  tdJogador.textContent = personagem.jogador
+  linha.appendChild(tdJogador)
+
+  // Célula de personagem
+  const tdPersonagem = document.createElement('td')
+  tdPersonagem.className = 'tabela-batalha__celula'
+  tdPersonagem.textContent = (estadoAtivo ? '⚔️ ' : '') + personagem.nome
+  linha.appendChild(tdPersonagem)
+
+  // Células de dano por turno
   turnosComDano.forEach(function (numeroTurno) {
+    const td = document.createElement('td')
+    td.className = 'tabela-batalha__celula'
     const danoNoTurno = (historicoDanos[personagem.id] || {})[numeroTurno]
-    const celula = document.createElement('td')
-    celula.className = 'tabela-batalha__celula'
 
     if (danoNoTurno) {
-      celula.classList.add('tabela-batalha__celula--dano')
-      celula.textContent = danoNoTurno
+      td.classList.add('tabela-batalha__celula--dano')
+      td.textContent = danoNoTurno
     } else {
-      celula.style.textAlign = 'center'
-      celula.style.color = 'var(--cor-texto-secundario)'
-      celula.textContent = '—'
+      td.style.textAlign = 'center'
+      td.style.color = 'var(--cor-texto-secundario)'
+      td.textContent = '—'
     }
 
-    linha.appendChild(celula)
+    linha.appendChild(td)
   })
 
-  const pvCritico = personagem.pvAtual <= Math.floor(personagem.pvMaximo * 0.25)
+  // Célula PV máximo
+  const tdPvMaximo = document.createElement('td')
+  tdPvMaximo.className = 'tabela-batalha__celula'
+  tdPvMaximo.textContent = personagem.pvMaximo
+  linha.appendChild(tdPvMaximo)
 
-  linha.innerHTML += `
-    <td class="tabela-batalha__celula">${personagem.pvMaximo}</td>
-    <td class="tabela-batalha__celula ${pvCritico
-      ? 'tabela-batalha__celula--pv-critico'
-      : 'tabela-batalha__celula--pv-atual'}">
-      ${personagem.pvAtual}${pvCritico ? ' ⚠️' : ''}
-    </td>
-    <td class="tabela-batalha__celula">
-      <button class="botao botao--excluir" data-id="${personagem.id}">
-        🗑️ Remover
-      </button>
-    </td>
-  `
+  // Célula PV atual
+  const pvCritico = personagem.pvAtual <= Math.floor(personagem.pvMaximo * 0.25)
+  const tdPvAtual = document.createElement('td')
+  tdPvAtual.className = `tabela-batalha__celula ${pvCritico
+    ? 'tabela-batalha__celula--pv-critico'
+    : 'tabela-batalha__celula--pv-atual'}`
+  tdPvAtual.textContent = personagem.pvAtual + (pvCritico ? ' ⚠️' : '')
+  linha.appendChild(tdPvAtual)
+
+  // Célula de ações
+  const tdAcoes = document.createElement('td')
+  tdAcoes.className = 'tabela-batalha__celula'
+  const botaoRemover = document.createElement('button')
+  botaoRemover.className = 'botao botao--excluir'
+  botaoRemover.dataset.id = personagem.id
+  botaoRemover.textContent = '🗑️ Remover'
+  tdAcoes.appendChild(botaoRemover)
+  linha.appendChild(tdAcoes)
 
   return linha
 }
@@ -236,13 +260,33 @@ function renderizarTabela() {
         </td>
       </tr>
     `
+    atualizarSeletorAlvo()
     return
   }
 
-  listaPersonagens.forEach(function (personagem, indice) {
+  listaPersonagens.forEach(function(personagem, indice) {
     const linha = criarLinhaPersonagem(personagem, indice, turnosComDano)
     corpoTabela.appendChild(linha)
   })
+
+  atualizarSeletorAlvo()
+}
+
+function atualizarSeletorAlvo() {
+  seletorAlvo = document.getElementById('seletorAlvo')
+  const valorAtual = seletorAlvo.value
+
+  seletorAlvo.innerHTML = '<option value="">— Selecione o alvo —</option>'
+
+  listaPersonagens.forEach(function (personagem) {
+    const opcao = document.createElement('option')
+    opcao.value = personagem.id
+    opcao.textContent = `${personagem.nome} (${personagem.jogador}) — PV: ${personagem.pvAtual}/${personagem.pvMaximo}`
+    seletorAlvo.appendChild(opcao)
+  })
+
+  // Mantém o alvo selecionado após renderizar
+  if (valorAtual) seletorAlvo.value = valorAtual
 }
 
 /* ============================================================
@@ -262,14 +306,17 @@ function validarCadastroPersonagem() {
   }
   if (!nomePersonagem) {
     exibirToast('Por favor, informe o nome do personagem.', 'aviso')
+    nomePersonagem.focus()
     return false
   }
   if (!campoIniciativa.value || isNaN(iniciativa)) {
     exibirToast('Por favor, informe um valor de iniciativa válido.', 'aviso')
+    campoIniciativa.focus()
     return false
   }
   if (!campoPontosDeVida.value || isNaN(pontosDeVida) || pontosDeVida <= 0) {
     exibirToast('Por favor, informe um valor de PV válido e maior que zero.', 'aviso')
+    pontosDeVida.focus()
     return false
   }
 
@@ -314,8 +361,11 @@ async function adicionarPersonagem() {
     })
 
     exibirToast(`${personagemSalvo.nome} entrou na batalha!`, 'sucesso')
-    limparCamposCadastro()
-    renderizarTabela()
+    setTimeout(function () {
+      limparCamposCadastro()
+      renderizarTabela()
+
+    }, 50)
 
   } catch (erro) {
     console.error('Erro ao adicionar personagem:', erro)
@@ -364,7 +414,10 @@ botaoAdicionarPersonagem.addEventListener('click', adicionarPersonagem)
    ============================================================ */
 
 function obterPersonagemAtivo() {
-  return listaPersonagens[indicePersonagemAtivo]
+  const idSelecionado = Number(seletorAlvo.value)
+  return listaPersonagens.find(function (personagem) {
+    return personagem.id === idSelecionado
+  })
 }
 
 function validarAcaoBatalha(campoValor, nomeCampo) {
@@ -373,10 +426,16 @@ function validarAcaoBatalha(campoValor, nomeCampo) {
     return false
   }
 
-  const valor = Number(campoValor.value)
+  if (!seletorAlvo.value) {
+    exibirToast('Selecione um alvo antes de continuar.', 'aviso')
+    seletorAlvo.focus()
+    return false
+  }
 
+  const valor = Number(campoValor.value)
   if (!campoValor.value || isNaN(valor) || valor <= 0) {
     exibirToast('Por favor, informe um valor válido para ' + nomeCampo + '.', 'aviso')
+    campoValor.focus()
     return false
   }
 
@@ -458,7 +517,7 @@ function avancarTurno() {
   }
 
   renderizarTabela()
-  exibirToast(`Vez de ${listaPersonagens[indicePersonagemAtivo].nome}!`, 'info')
+  exibirToast(`Sua vez ${listaPersonagens[indicePersonagemAtivo].nome}!`, 'info')
 }
 
 botaoAplicarDano.addEventListener('click', aplicarDano)

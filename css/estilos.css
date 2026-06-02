@@ -202,6 +202,23 @@ body {
   width: 100%;
 }
 
+.painel-controle__seletor-alvo {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.painel-controle__label {
+  font-size: 0.8rem;
+  color: var(--cor-texto-secundario);
+  font-weight: 600;
+}
+
+.campo-select {
+  cursor: pointer;
+  width: 100%;
+}
+
 .painel-controle__coluna {
   display: flex;
   flex-direction: column;
@@ -471,6 +488,8 @@ body {
   align-items: center;
   gap: var(--espaco-pequeno);
   animation: toastVida 3.6s ease forwards;
+  will-change: transform, opacity;
+  transform: translateZ(0);
 }
 
 .toast--longa {
