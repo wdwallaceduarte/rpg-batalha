@@ -1,3 +1,9 @@
+/* ============================================================
+   MÓDULO: api.js
+   Responsável por toda comunicação com o JSON Server.
+   Centralizar aqui facilita troca futura de servidor.
+   ============================================================ */
+
 const URL_BASE = 'http://localhost:3000'
 
 export async function buscarPersonagensNaApi() {
