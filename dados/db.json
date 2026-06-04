@@ -6,9 +6,9 @@
       "nome": "jao",
       "iniciativa": 15,
       "pvMaximo": 100,
-      "pvAtual": 35,
+      "pvAtual": 0,
       "historicoDanos": {
-        "1": 65
+        "1": 165
       }
     },
     {
@@ -17,9 +17,9 @@
       "nome": "barbaro",
       "iniciativa": 11,
       "pvMaximo": 200,
-      "pvAtual": 50,
+      "pvAtual": 0,
       "historicoDanos": {
-        "1": 150
+        "1": 201
       }
     },
     {
@@ -29,7 +29,9 @@
       "iniciativa": 16,
       "pvMaximo": 90,
       "pvAtual": 90,
-      "historicoDanos": {}
+      "historicoDanos": {
+        "1": 91
+      }
     }
   ]
 }
