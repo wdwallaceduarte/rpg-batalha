@@ -10,12 +10,12 @@ Sistema para gerenciamento de combates em RPG de mesa.
 
 ✨ Funcionalidades
 
-✔ Cadastro de personagens
-✔ Controle de iniciativa
-✔ Controle de turnos
-✔ Aplicação de dano
-✔ Aplicação de cura
-✔ Persistência de dados
+✔ Cadastro de personagens  
+✔ Controle de iniciativa  
+✔ Controle de turnos  
+✔ Aplicação de dano  
+✔ Aplicação de cura  
+✔ Persistência de dados  
 
 ------------------------------------------------
 
