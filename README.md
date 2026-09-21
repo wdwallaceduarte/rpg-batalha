@@ -30,7 +30,7 @@ JSON Server
 
 🚀 Como executar
 
-...
+Subir o servidor no terminal usando o comando `npm run servidor`
 
 ------------------------------------------------
 
@@ -42,7 +42,7 @@ JSON Server
 
 📌 Próximas melhorias
 
-...
+Migrar para React
 
 ------------------------------------------------
 
