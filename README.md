@@ -21,10 +21,10 @@ Sistema para gerenciamento de combates em RPG de mesa.
 
 🛠 Tecnologias
 
-HTML5
-CSS3
-JavaScript
-JSON Server
+• HTML5  
+• CSS3  
+• JavaScript  
+• JSON Server  
 
 ------------------------------------------------
 
