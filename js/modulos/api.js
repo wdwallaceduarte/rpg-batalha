@@ -2,6 +2,8 @@
    MÓDULO: api.js (Refatorado para localStorage)
    ============================================================ */
 
+  //  Este arquivo foi modificado para o deploy na plataforma Vercel
+
 const CHAVE_STORAGE = 'rpg_batalha_personagens'
 
 // Função auxiliar para ler os dados convertidos do localStorage

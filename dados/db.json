@@ -1,13 +1,40 @@
 {
   "personagens": [
     {
-      "id": 1780667938199,
+      "id": 1790026368029,
       "jogador": "wallace",
       "nome": "monge",
-      "iniciativa": 15,
+      "iniciativa": 16,
       "pvMaximo": 100,
-      "pvAtual": 100,
-      "historicoDanos": {}
+      "pvAtual": 50,
+      "historicoDanos": {
+        "1": 50
+      }
+    },
+    {
+      "id": 1790026410628,
+      "jogador": "narrador",
+      "nome": "boss",
+      "iniciativa": 20,
+      "pvMaximo": 250,
+      "pvAtual": 64,
+      "historicoDanos": {
+        "1": 162,
+        "2": 67,
+        "3": 24,
+        "4": 60
+      }
+    },
+    {
+      "id": 1790026592057,
+      "jogador": "rafael",
+      "nome": "ladino",
+      "iniciativa": 25,
+      "pvMaximo": 70,
+      "pvAtual": 20,
+      "historicoDanos": {
+        "3": 50
+      }
     }
   ]
 }
